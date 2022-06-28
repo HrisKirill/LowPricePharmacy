@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -19,7 +20,7 @@ public class URLService {
     // whether an url is
     // already entered in our system
     private String domain; // Use this attribute to generate urls for a custom
-    // domain name defaults to http://tiny
+    // domain name defaults to http://localhost:8080
     private char myChars[]; // This array is used for character to number
     // mapping
     private Random myRand; // Random object used to generate random integers
@@ -33,7 +34,7 @@ public class URLService {
         keyMap = new HashMap<>();
         valueMap = new HashMap<>();
         myRand = new Random();
-        keyLength = 8;
+        keyLength = 21;
         myChars = new char[62];
         for (int i = 0; i < 62; i++) {
             int j = 0;
@@ -47,7 +48,7 @@ public class URLService {
             myChars[i] = (char) j;
         }
 
-        domain = "http://tiny";
+        domain = "http://localhost:8080";
     }
 
 
@@ -86,21 +87,6 @@ public class URLService {
     }
 
     /**
-     * Expand short url
-     *
-     * @param shortURL shorten url
-     * @return original url
-     */
-    public String expandURL(String shortURL) {
-        String longURL = "";
-        String key = shortURL.substring(domain.length() + 1);
-        longURL = keyMap.get(key);
-        log.info("Long url: " + longURL);
-
-        return longURL;
-    }
-
-    /**
      * This method should take care various issues with a valid url
      * e.g. www.google.com,www.google.com/, http://www.google.com,
      * http://www.google.com/
@@ -134,8 +120,8 @@ public class URLService {
     private String getKey(String longURL) {
         String key;
         key = generateKey();
-        keyMap.put(key, longURL);
-        valueMap.put(longURL, key);
+        keyMap.put(key, protocolName + longURL);
+        valueMap.put(protocolName + longURL, key);
 
         return key;
     }
@@ -161,6 +147,16 @@ public class URLService {
 
         return key.toString();
     }
+
+    public String searchLongUrlInMap(String shortUrl) {
+        for (Map.Entry<String, String> entry : keyMap.entrySet()) {
+            if (shortUrl.equals(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return "";
+    }
+
 
     public String getProtocolName() {
         return protocolName;
