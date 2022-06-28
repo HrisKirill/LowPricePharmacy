@@ -10,5 +10,4 @@
    {
     "originalName":"https://amo.to/F/PV5I5Q/DZPE8A"
     }
-- Select Get method with address http://localhost:8080/original-url-redirect
-
+- Click on the received url and execute the request
